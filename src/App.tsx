@@ -11,6 +11,7 @@ import Signup from "./pages/Signup";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 import Cart from "./pages/Cart";
+import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/events" element={<Events />} />
               <Route path="/events/:id" element={<EventDetail />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

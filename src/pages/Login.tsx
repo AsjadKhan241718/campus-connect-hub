@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, GraduationCap, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, Mail, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,11 +12,18 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { login, isLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = (location.state as any)?.from?.pathname || '/';
+
+  // Redirect if already logged in
+  if (user) {
+    navigate(from, { replace: true });
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +33,9 @@ const Login = () => {
       return;
     }
 
+    setIsSubmitting(true);
     const result = await login(email, password);
+    setIsSubmitting(false);
     
     if (result.success) {
       toast.success('Welcome back!');
@@ -35,12 +44,6 @@ const Login = () => {
       toast.error(result.error || 'Login failed');
     }
   };
-
-  const demoAccounts = [
-    { email: 'student@ssec.edu', role: 'Student' },
-    { email: 'club@ssec.edu', role: 'Club Coordinator' },
-    { email: 'admin@ssec.edu', role: 'Admin' },
-  ];
 
   return (
     <div className="min-h-screen flex">
@@ -86,6 +89,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
@@ -101,6 +105,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 pr-10"
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
@@ -122,30 +127,17 @@ const Login = () => {
               </Link>
             </div>
 
-            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign in'}
+            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign in'
+              )}
             </Button>
           </form>
-
-          {/* Demo Accounts */}
-          <div className="space-y-3">
-            <p className="text-sm text-center text-muted-foreground">Quick demo access:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {demoAccounts.map((account) => (
-                <Button
-                  key={account.email}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setEmail(account.email);
-                    setPassword('demo123');
-                  }}
-                >
-                  {account.role}
-                </Button>
-              ))}
-            </div>
-          </div>
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-muted-foreground">

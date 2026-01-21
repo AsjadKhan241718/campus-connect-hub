@@ -4,13 +4,11 @@ import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, ArrowRight, Percent, India
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { mockDiscountRules } from '@/lib/mock-data';
 import { format } from 'date-fns';
 
 const Cart = () => {
-  const { user, logout } = useAuth();
   const { 
     items, 
     removeFromCart, 
@@ -26,12 +24,7 @@ const Cart = () => {
   if (items.length === 0) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
-        <Header 
-          user={user} 
-          cartItemCount={itemCount} 
-          notificationCount={2}
-          onLogout={logout}
-        />
+        <Header />
         
         <main className="flex-1 flex items-center justify-center p-4">
           <motion.div
@@ -64,12 +57,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header 
-        user={user} 
-        cartItemCount={itemCount} 
-        notificationCount={2}
-        onLogout={logout}
-      />
+      <Header />
 
       <main className="flex-1 py-8">
         <div className="container mx-auto px-4">

@@ -17,16 +17,13 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { mockEvents } from '@/lib/mock-data';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 const EventDetail = () => {
   const { id } = useParams();
-  const { user, logout } = useAuth();
-  const { addToCart, itemCount } = useCart();
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
 
   const event = mockEvents.find(e => e.id === id);
@@ -62,12 +59,7 @@ const EventDetail = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header 
-        user={user} 
-        cartItemCount={itemCount} 
-        notificationCount={2}
-        onLogout={logout}
-      />
+      <Header />
 
       <main className="flex-1">
         {/* Hero Image */}
