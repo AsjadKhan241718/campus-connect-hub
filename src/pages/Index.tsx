@@ -14,13 +14,11 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import EventCard from '@/components/events/EventCard';
 import { mockEvents, mockClubs } from '@/lib/mock-data';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import heroImage from '@/assets/hero-event.jpg';
 
 const Index = () => {
-  const { user, logout } = useAuth();
-  const { addToCart, itemCount } = useCart();
+  const { addToCart } = useCart();
   
   const featuredEvents = mockEvents.filter(e => e.status === 'approved').slice(0, 3);
 
@@ -40,12 +38,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header 
-        user={user} 
-        cartItemCount={itemCount} 
-        notificationCount={2}
-        onLogout={logout}
-      />
+      <Header />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">

@@ -22,22 +22,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 
-interface HeaderProps {
-  user?: {
-    name: string;
-    email: string;
-    role: string;
-    avatar?: string;
-  } | null;
-  cartItemCount?: number;
-  notificationCount?: number;
-  onLogout?: () => void;
-}
-
-const Header = ({ user, cartItemCount = 0, notificationCount = 0, onLogout }: HeaderProps) => {
+const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, profile, logout } = useAuth();
+  const { itemCount } = useCart();
+  
+  const notificationCount = 0; // TODO: implement notifications
 
   const navLinks = [
     { href: '/events', label: 'Events' },
@@ -48,8 +42,8 @@ const Header = ({ user, cartItemCount = 0, notificationCount = 0, onLogout }: He
   const isActive = (path: string) => location.pathname === path;
 
   const getDashboardLink = () => {
-    if (!user) return '/login';
-    switch (user.role) {
+    if (!profile) return '/login';
+    switch (profile.role) {
       case 'admin': return '/admin';
       case 'club_coordinator': return '/club-dashboard';
       default: return '/dashboard';
@@ -96,9 +90,9 @@ const Header = ({ user, cartItemCount = 0, notificationCount = 0, onLogout }: He
                 <Link to="/cart">
                   <Button variant="ghost" size="icon" className="relative">
                     <ShoppingCart className="h-5 w-5" />
-                    {cartItemCount > 0 && (
+                    {itemCount > 0 && (
                       <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-accent text-accent-foreground text-xs">
-                        {cartItemCount}
+                        {itemCount}
                       </Badge>
                     )}
                   </Button>
@@ -129,8 +123,8 @@ const Header = ({ user, cartItemCount = 0, notificationCount = 0, onLogout }: He
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="rounded-full">
-                      {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="h-8 w-8 rounded-full" />
+                      {profile?.avatarUrl ? (
+                        <img src={profile.avatarUrl} alt={profile.fullName} className="h-8 w-8 rounded-full" />
                       ) : (
                         <User className="h-5 w-5" />
                       )}
@@ -139,8 +133,8 @@ const Header = ({ user, cartItemCount = 0, notificationCount = 0, onLogout }: He
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel>
                       <div className="flex flex-col">
-                        <span>{user.name}</span>
-                        <span className="text-xs font-normal text-muted-foreground">{user.email}</span>
+                        <span>{profile?.fullName || 'User'}</span>
+                        <span className="text-xs font-normal text-muted-foreground">{user?.email}</span>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -157,7 +151,7 @@ const Header = ({ user, cartItemCount = 0, notificationCount = 0, onLogout }: He
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={onLogout} className="cursor-pointer text-destructive">
+                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive">
                       <LogOut className="mr-2 h-4 w-4" />
                       Logout
                     </DropdownMenuItem>

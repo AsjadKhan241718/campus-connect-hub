@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, GraduationCap, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useAuth } from '@/contexts/AuthContext';
-import { UserRole } from '@/types';
+import { useAuth, AppRole } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 const Signup = () => {
@@ -15,10 +14,17 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('student');
+  const [role, setRole] = useState<AppRole>('student');
   const [showPassword, setShowPassword] = useState(false);
-  const { signup, isLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { signup, user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  if (user) {
+    navigate('/', { replace: true });
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +44,9 @@ const Signup = () => {
       return;
     }
 
+    setIsSubmitting(true);
     const result = await signup(name, email, password, role);
+    setIsSubmitting(false);
     
     if (result.success) {
       toast.success('Account created successfully!');
@@ -49,8 +57,8 @@ const Signup = () => {
   };
 
   const roles = [
-    { value: 'student', label: 'Student', description: 'Browse and register for events' },
-    { value: 'club_coordinator', label: 'Club Coordinator', description: 'Manage club and organize events' },
+    { value: 'student' as AppRole, label: 'Student', description: 'Browse and register for events' },
+    { value: 'club_coordinator' as AppRole, label: 'Club Coordinator', description: 'Manage club and organize events' },
   ];
 
   return (
@@ -147,6 +155,7 @@ const Signup = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
@@ -162,6 +171,7 @@ const Signup = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
@@ -178,6 +188,7 @@ const Signup = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10"
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -192,14 +203,28 @@ const Signup = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="pl-10"
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
             </div>
 
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="showPass"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+                className="rounded border-input"
+              />
+              <label htmlFor="showPass" className="text-sm text-muted-foreground cursor-pointer">
+                Show password
+              </label>
+            </div>
+
             <div className="space-y-3">
               <Label>I am a</Label>
-              <RadioGroup value={role} onValueChange={(value) => setRole(value as UserRole)}>
+              <RadioGroup value={role} onValueChange={(value) => setRole(value as AppRole)}>
                 {roles.map((r) => (
                   <div
                     key={r.value}
@@ -208,9 +233,9 @@ const Signup = () => {
                         ? 'border-primary bg-primary/5'
                         : 'border-border hover:border-primary/50'
                     }`}
-                    onClick={() => setRole(r.value as UserRole)}
+                    onClick={() => setRole(r.value)}
                   >
-                    <RadioGroupItem value={r.value} id={r.value} />
+                    <RadioGroupItem value={r.value} id={r.value} disabled={isSubmitting} />
                     <div className="flex-1">
                       <Label htmlFor={r.value} className="font-medium cursor-pointer">
                         {r.label}
@@ -236,8 +261,15 @@ const Signup = () => {
               </label>
             </div>
 
-            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Create account'}
+            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create account'
+              )}
             </Button>
           </form>
 

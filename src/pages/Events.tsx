@@ -15,12 +15,10 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import EventCard from '@/components/events/EventCard';
 import { mockEvents } from '@/lib/mock-data';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 
 const Events = () => {
-  const { user, logout } = useAuth();
-  const { addToCart, itemCount } = useCart();
+  const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('date');
@@ -44,12 +42,7 @@ const Events = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header 
-        user={user} 
-        cartItemCount={itemCount} 
-        notificationCount={2}
-        onLogout={logout}
-      />
+      <Header />
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary/5 via-background to-accent/5 py-12 md:py-16">
