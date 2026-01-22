@@ -13,11 +13,11 @@ const Footer = () => {
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <span className="font-display text-lg font-bold">SSEC Events</span>
+                <span className="font-display text-lg font-bold">MHSSCE Events</span>
               </div>
             </div>
             <p className="text-sm text-background/70 leading-relaxed">
-              Saboo Siddik College of Engineering's centralized platform for managing clubs, events, and student activities.
+              MHSSCE — Saboo Siddik College of Engineering's centralized platform for managing clubs, events, and student activities.
             </p>
             <div className="flex gap-3">
               <a href="#" className="p-2 rounded-lg bg-background/10 hover:bg-background/20 transition-colors">
@@ -96,7 +96,7 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="h-4 w-4 mt-0.5 text-primary" />
                 <span className="text-sm text-background/70">
-                  Saboo Siddik College of Engineering,<br />
+                  MHSSCE — Saboo Siddik College of Engineering,<br />
                   8, Saboo Siddik Polytechnic Rd,<br />
                   Byculla, Mumbai - 400008
                 </span>
@@ -115,7 +115,7 @@ const Footer = () => {
 
         <div className="border-t border-background/10 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-background/50">
-            © 2024 Saboo Siddik College of Engineering. All rights reserved.
+            © 2024 MHSSCE — Saboo Siddik College of Engineering. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link to="/privacy" className="text-sm text-background/50 hover:text-background/70 transition-colors">

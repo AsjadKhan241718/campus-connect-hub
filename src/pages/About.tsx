@@ -27,10 +27,10 @@ const About = () => {
               <GraduationCap className="h-10 w-10 text-primary" />
             </div>
             <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground">
-              About Saboo Siddik College
+              About MHSSCE
             </h1>
             <p className="text-muted-foreground mt-4 text-lg leading-relaxed">
-              A premier engineering institution in Mumbai, committed to excellence in technical education since 1935.
+              MHSSCE — Saboo Siddik College of Engineering, a premier engineering institution in Mumbai, committed to excellence in technical education since 1935.
             </p>
           </motion.div>
         </div>
@@ -72,13 +72,13 @@ const About = () => {
             >
               <h2 className="text-3xl font-display font-bold text-foreground">Our Legacy</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Saboo Siddik College of Engineering (SSCE) is one of the oldest and most prestigious engineering colleges in Mumbai, affiliated with the University of Mumbai. Established in 1935, the institution has been at the forefront of technical education for nearly nine decades.
+                MHSSCE — Saboo Siddik College of Engineering is one of the oldest and most prestigious engineering colleges in Mumbai, affiliated with the University of Mumbai. Established in 1935, the institution has been at the forefront of technical education for nearly nine decades.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 The college offers undergraduate and postgraduate programs in various branches of engineering including Computer Engineering, Information Technology, Electronics & Telecommunication, Mechanical Engineering, and Civil Engineering.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                With state-of-the-art laboratories, experienced faculty, and strong industry connections, SSCE continues to produce engineers who excel in their respective fields and contribute to national development.
+                With state-of-the-art laboratories, experienced faculty, and strong industry connections, MHSSCE continues to produce engineers who excel in their respective fields and contribute to national development.
               </p>
             </motion.div>
 
@@ -90,7 +90,7 @@ const About = () => {
             >
               <h2 className="text-3xl font-display font-bold text-foreground">Campus Life</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Beyond academics, SSCE offers a vibrant campus life with numerous clubs and committees that organize events throughout the year. From technical symposiums and hackathons to cultural festivals and sports tournaments, there's always something happening on campus.
+                Beyond academics, MHSSCE offers a vibrant campus life with numerous clubs and committees that organize events throughout the year. From technical symposiums and hackathons to cultural festivals and sports tournaments, there's always something happening on campus.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Our student-run committees including IEEE SSEC, ACM SSEC, Programmer's Club, and CSI SSEC provide platforms for students to explore their interests, develop leadership skills, and build lasting connections.

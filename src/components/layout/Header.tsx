@@ -66,7 +66,7 @@ const Header = () => {
               <GraduationCap className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="hidden sm:block">
-              <span className="font-display text-lg font-bold text-foreground">SSEC</span>
+              <span className="font-display text-lg font-bold text-foreground">MHSSCE</span>
               <span className="ml-1 text-sm text-muted-foreground">Events</span>
             </div>
           </Link>
