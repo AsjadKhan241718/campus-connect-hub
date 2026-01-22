@@ -14,6 +14,164 @@ export type Database = {
   }
   public: {
     Tables: {
+      clubs: {
+        Row: {
+          coordinator_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          logo_url: string | null
+          member_count: number | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          coordinator_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          member_count?: number | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          coordinator_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          member_count?: number | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      discount_rules: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          created_by: string | null
+          discount_type: string
+          id: string
+          min_quantity: number
+          value: number
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          created_by?: string | null
+          discount_type: string
+          id?: string
+          min_quantity: number
+          value: number
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          created_by?: string | null
+          discount_type?: string
+          id?: string
+          min_quantity?: number
+          value?: number
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          capacity: number
+          category: Database["public"]["Enums"]["event_category"]
+          club_id: string
+          created_at: string
+          created_by: string | null
+          date: string
+          description: string | null
+          id: string
+          poster_url: string | null
+          price: number
+          registered_count: number | null
+          status: Database["public"]["Enums"]["event_status"]
+          time: string
+          title: string
+          updated_at: string
+          venue: string
+        }
+        Insert: {
+          capacity?: number
+          category?: Database["public"]["Enums"]["event_category"]
+          club_id: string
+          created_at?: string
+          created_by?: string | null
+          date: string
+          description?: string | null
+          id?: string
+          poster_url?: string | null
+          price?: number
+          registered_count?: number | null
+          status?: Database["public"]["Enums"]["event_status"]
+          time: string
+          title: string
+          updated_at?: string
+          venue: string
+        }
+        Update: {
+          capacity?: number
+          category?: Database["public"]["Enums"]["event_category"]
+          club_id?: string
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          description?: string | null
+          id?: string
+          poster_url?: string | null
+          price?: number
+          registered_count?: number | null
+          status?: Database["public"]["Enums"]["event_status"]
+          time?: string
+          title?: string
+          updated_at?: string
+          venue?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -40,6 +198,53 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      registrations: {
+        Row: {
+          attended: boolean | null
+          base_price: number
+          created_at: string
+          discount_applied: number | null
+          event_id: string
+          final_total: number
+          id: string
+          quantity: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          attended?: boolean | null
+          base_price: number
+          created_at?: string
+          discount_applied?: number | null
+          event_id: string
+          final_total: number
+          id?: string
+          quantity?: number
+          status?: string
+          user_id: string
+        }
+        Update: {
+          attended?: boolean | null
+          base_price?: number
+          created_at?: string
+          discount_applied?: number | null
+          event_id?: string
+          final_total?: number
+          id?: string
+          quantity?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -81,6 +286,15 @@ export type Database = {
     }
     Enums: {
       app_role: "student" | "club_coordinator" | "admin"
+      event_category:
+        | "Technology"
+        | "Cultural"
+        | "Sports"
+        | "Business"
+        | "Workshop"
+        | "Seminar"
+        | "Competition"
+      event_status: "draft" | "pending" | "approved" | "rejected" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -209,6 +423,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["student", "club_coordinator", "admin"],
+      event_category: [
+        "Technology",
+        "Cultural",
+        "Sports",
+        "Business",
+        "Workshop",
+        "Seminar",
+        "Competition",
+      ],
+      event_status: ["draft", "pending", "approved", "rejected", "completed"],
     },
   },
 } as const
