@@ -33,14 +33,6 @@ const Header = () => {
   
   const notificationCount = 0; // TODO: implement notifications
 
-  const navLinks = [
-    { href: '/events', label: 'Events' },
-    { href: '/clubs', label: 'Clubs' },
-    { href: '/about', label: 'About' },
-  ];
-
-  const isActive = (path: string) => location.pathname === path;
-
   const getDashboardLink = () => {
     if (!profile) return '/login';
     switch (profile.role) {
@@ -49,6 +41,20 @@ const Header = () => {
       default: return '/dashboard';
     }
   };
+
+  const navLinks = [
+    { href: '/events', label: 'Events' },
+    { href: '/clubs', label: 'Clubs' },
+    { href: '/about', label: 'About' },
+  ];
+
+  // Add dashboard link for logged-in users
+  const userNavLinks = user ? [
+    ...navLinks,
+    { href: getDashboardLink(), label: 'Dashboard' },
+  ] : navLinks;
+
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-xl">
@@ -67,7 +73,7 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {userNavLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
@@ -192,7 +198,7 @@ const Header = () => {
             className="md:hidden border-t border-border bg-card"
           >
             <nav className="container mx-auto px-4 py-4 flex flex-col gap-2">
-              {navLinks.map((link) => (
+              {userNavLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
@@ -206,6 +212,19 @@ const Header = () => {
                   {link.label}
                 </Link>
               ))}
+              {user && (
+                <Button 
+                  variant="ghost" 
+                  className="justify-start px-4 text-destructive hover:text-destructive mt-2"
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              )}
               {!user && (
                 <div className="flex gap-2 pt-2 border-t border-border mt-2">
                   <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
