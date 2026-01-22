@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
-const NotFound = () => {
+const ComingSoon = () => {
   const location = useLocation();
   
   // Get page name from path
@@ -76,4 +76,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default ComingSoon;

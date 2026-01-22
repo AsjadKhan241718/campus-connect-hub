@@ -82,7 +82,7 @@ const Index = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg text-background/80 leading-relaxed"
             >
-              Discover, register, and participate in exciting events organized by student clubs at Saboo Siddik College of Engineering.
+              Discover, register, and participate in exciting events organized by student clubs at MHSSCE — Saboo Siddik College of Engineering.
             </motion.p>
 
             <motion.div

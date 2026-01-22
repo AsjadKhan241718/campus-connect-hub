@@ -12,8 +12,10 @@ import Signup from "./pages/Signup";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 import Clubs from "./pages/Clubs";
+import ClubDetail from "./pages/ClubDetail";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
+import Profile from "./pages/Profile";
 import StudentDashboard from "./pages/StudentDashboard";
 import ClubDashboard from "./pages/ClubDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -38,8 +40,16 @@ const App = () => (
               <Route path="/events" element={<Events />} />
               <Route path="/events/:id" element={<EventDetail />} />
               <Route path="/clubs" element={<Clubs />} />
+              <Route path="/clubs/:id" element={<ClubDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/cart" element={<Cart />} />
+              
+              {/* Protected Routes - All authenticated users */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
               
               {/* Protected Routes - Students */}
               <Route path="/dashboard" element={
@@ -64,6 +74,14 @@ const App = () => (
               
               {/* Error Routes */}
               <Route path="/unauthorized" element={<Unauthorized />} />
+              
+              {/* Fallback routes - show Coming Soon instead of 404 */}
+              <Route path="/contact" element={<NotFound />} />
+              <Route path="/help" element={<NotFound />} />
+              <Route path="/privacy" element={<NotFound />} />
+              <Route path="/terms" element={<NotFound />} />
+              <Route path="/settings" element={<NotFound />} />
+              <Route path="/checkout" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
