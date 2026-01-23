@@ -61,7 +61,7 @@ const Login = () => {
               <GraduationCap className="h-7 w-7 text-primary-foreground" />
             </div>
             <div>
-              <span className="font-display text-xl font-bold text-foreground">SSEC</span>
+              <span className="font-display text-xl font-bold text-foreground">MHSSCE</span>
               <span className="ml-1 text-muted-foreground">Events</span>
             </div>
           </Link>
@@ -85,7 +85,7 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@ssec.edu"
+                  placeholder="you@mhssce.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"

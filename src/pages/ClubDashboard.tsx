@@ -26,7 +26,7 @@ const ClubDashboard = () => {
   const { profile } = useAuth();
   
   // Mock: Get events for the coordinator's club
-  const myClub = mockClubs[0]; // IEEE SSEC
+  const myClub = mockClubs[0]; // IEEE MHSSCE
   const myEvents = mockEvents.filter(e => e.clubId === myClub.id);
   const pendingEvents = myEvents.filter(e => e.status === 'pending');
   const approvedEvents = myEvents.filter(e => e.status === 'approved');

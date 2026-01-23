@@ -4,7 +4,7 @@ import { Club, Event, DiscountRule } from '@/types';
 export const mockClubs: Club[] = [
   {
     id: '1',
-    name: 'IEEE SSEC',
+    name: 'IEEE MHSSCE',
     description: 'Institute of Electrical and Electronics Engineers student chapter promoting technical excellence through workshops, hackathons, and industry connections.',
     logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=IEEE',
     coordinatorId: '2',
@@ -14,7 +14,7 @@ export const mockClubs: Club[] = [
   },
   {
     id: '2',
-    name: 'ACM SSEC',
+    name: 'ACM MHSSCE',
     description: 'Association for Computing Machinery chapter fostering computing education and research through coding contests and tech talks.',
     logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=ACM',
     coordinatorId: '2',
@@ -34,7 +34,7 @@ export const mockClubs: Club[] = [
   },
   {
     id: '4',
-    name: 'CSI SSEC',
+    name: 'CSI MHSSCE',
     description: 'Computer Society of India chapter bridging academia and industry through seminars, certifications, and networking events.',
     logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=CSI',
     coordinatorId: '2',
@@ -73,7 +73,7 @@ export const mockEvents: Event[] = [
     club: mockClubs[0],
     date: new Date('2024-03-15'),
     time: '09:00 AM',
-    venue: 'Main Auditorium, SSEC Campus',
+    venue: 'Main Auditorium, MHSSCE Campus',
     price: 299,
     capacity: 500,
     registeredCount: 342,

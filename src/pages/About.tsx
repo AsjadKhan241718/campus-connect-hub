@@ -93,7 +93,7 @@ const About = () => {
                 Beyond academics, MHSSCE offers a vibrant campus life with numerous clubs and committees that organize events throughout the year. From technical symposiums and hackathons to cultural festivals and sports tournaments, there's always something happening on campus.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Our student-run committees including IEEE SSEC, ACM SSEC, Programmer's Club, and CSI SSEC provide platforms for students to explore their interests, develop leadership skills, and build lasting connections.
+                Our student-run committees including IEEE MHSSCE, ACM MHSSCE, Programmer's Club, and CSI MHSSCE provide platforms for students to explore their interests, develop leadership skills, and build lasting connections.
               </p>
               <div className="bg-secondary/50 rounded-xl p-6">
                 <h3 className="font-semibold text-foreground mb-4">Contact Information</h3>
@@ -110,11 +110,11 @@ const About = () => {
                   </div>
                   <div className="flex items-center gap-3 text-sm">
                     <Mail className="h-5 w-5 text-primary" />
-                    <span className="text-muted-foreground">info@ssec.edu.in</span>
+                    <span className="text-muted-foreground">info@mhssce.edu.in</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
                     <Globe className="h-5 w-5 text-primary" />
-                    <span className="text-muted-foreground">www.ssec.edu.in</span>
+                    <span className="text-muted-foreground">www.mhssce.edu.in</span>
                   </div>
                 </div>
               </div>

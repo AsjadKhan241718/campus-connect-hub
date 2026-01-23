@@ -43,7 +43,7 @@ const CampusBuddy = () => {
 
   const quickSuggestions = [
     "What events are happening?",
-    "Tell me about IEEE SSEC",
+    "Tell me about IEEE MHSSCE",
     "How do bulk discounts work?",
     "Recommend technical events",
   ];

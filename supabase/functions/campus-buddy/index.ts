@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
 
 Your role is to help students:
 1. Find events based on their interests (technical, cultural, sports, seminars, workshops)
-2. Learn about student clubs (IEEE SSEC, ACM SSEC, Programmer's Club, CSI SSEC)
+2. Learn about student clubs (IEEE MHSSCE, ACM MHSSCE, Programmer's Club, CSI MHSSCE)
 3. Understand how to register for events
 4. Get information about bulk discounts (10% for 3+ items, 15% for 5+, 25% for 10+)
 5. Navigate the platform
