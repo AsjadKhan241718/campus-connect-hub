@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import EventCard from '@/components/events/EventCard';
+import SmartSuggestions from '@/components/home/SmartSuggestions';
 import { mockEvents, mockClubs } from '@/lib/mock-data';
 import { useCart } from '@/contexts/CartContext';
 import heroImage from '@/assets/hero-event.jpg';
@@ -147,6 +148,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Smart Suggestions */}
+      <SmartSuggestions />
 
       {/* Featured Events */}
       <section className="py-20 bg-background">

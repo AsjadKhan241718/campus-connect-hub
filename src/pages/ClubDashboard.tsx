@@ -67,10 +67,12 @@ const ClubDashboard = () => {
                 Manage your club events and participants
               </p>
             </div>
-            <Button className="gap-2 w-fit">
-              <Plus className="h-4 w-4" />
-              Create New Event
-            </Button>
+            <Link to="/create-event">
+              <Button className="gap-2 w-fit">
+                <Plus className="h-4 w-4" />
+                Create New Event
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Stats Grid */}
@@ -148,9 +150,11 @@ const ClubDashboard = () => {
                             </Badge>
                           </td>
                           <td className="py-4 px-4 text-right">
-                            <Button variant="ghost" size="sm">
-                              View <ChevronRight className="h-4 w-4 ml-1" />
-                            </Button>
+                            <Link to={`/events/${event.id}`}>
+                              <Button variant="ghost" size="sm">
+                                View <ChevronRight className="h-4 w-4 ml-1" />
+                              </Button>
+                            </Link>
                           </td>
                         </tr>
                       ))}
@@ -182,10 +186,12 @@ const ClubDashboard = () => {
                     <p className="text-sm text-muted-foreground">{myClub.memberCount} members</p>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full gap-2">
-                  <Settings className="h-4 w-4" />
-                  Club Settings
-                </Button>
+                <Link to={`/clubs/${myClub.id}`}>
+                  <Button variant="outline" className="w-full gap-2">
+                    <Settings className="h-4 w-4" />
+                    Club Settings
+                  </Button>
+                </Link>
               </div>
 
               {/* Quick Stats */}
