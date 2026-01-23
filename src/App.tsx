@@ -2,10 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import CampusBuddy from "@/components/chatbot/CampusBuddy";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -15,10 +16,12 @@ import Clubs from "./pages/Clubs";
 import ClubDetail from "./pages/ClubDetail";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import Profile from "./pages/Profile";
 import StudentDashboard from "./pages/StudentDashboard";
 import ClubDashboard from "./pages/ClubDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import CreateEvent from "./pages/CreateEvent";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
@@ -64,6 +67,11 @@ const App = () => (
                   <ClubDashboard />
                 </ProtectedRoute>
               } />
+              <Route path="/create-event" element={
+                <ProtectedRoute allowedRoles={['club_coordinator', 'admin']}>
+                  <CreateEvent />
+                </ProtectedRoute>
+              } />
               
               {/* Protected Routes - Admin */}
               <Route path="/admin" element={
@@ -75,15 +83,22 @@ const App = () => (
               {/* Error Routes */}
               <Route path="/unauthorized" element={<Unauthorized />} />
               
+              {/* Checkout - requires auth */}
+              <Route path="/checkout" element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              } />
+              
               {/* Fallback routes - show Coming Soon instead of 404 */}
               <Route path="/contact" element={<NotFound />} />
               <Route path="/help" element={<NotFound />} />
               <Route path="/privacy" element={<NotFound />} />
               <Route path="/terms" element={<NotFound />} />
               <Route path="/settings" element={<NotFound />} />
-              <Route path="/checkout" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CampusBuddy />
           </BrowserRouter>
         </TooltipProvider>
       </CartProvider>
