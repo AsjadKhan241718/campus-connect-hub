@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, User, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { mockEvents, mockClubs } from '@/lib/mock-data';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Message {
   id: string;
@@ -20,7 +21,7 @@ const CampusBuddy = () => {
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'm Campus Buddy 🎓 I can help you find events, learn about clubs, and navigate MHSSCE's campus activities. What would you like to know?",
+      content: "Hi! I'm Campus Buddy 🎓 Welcome to MHSSCE's Event & Club Management System! I can help you:\n\n• Find events based on your interests\n• Learn about our clubs (IEEE, ACM, CSI, Programmer's Club)\n• Guide you through registration\n• Navigate the platform\n\nWhat would you like to know?",
       timestamp: new Date(),
     },
   ]);
@@ -28,6 +29,7 @@ const CampusBuddy = () => {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { user, profile } = useAuth();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -41,12 +43,43 @@ const CampusBuddy = () => {
     }
   }, [isOpen]);
 
-  const quickSuggestions = [
-    "What events are happening?",
-    "Tell me about IEEE MHSSCE",
-    "How do bulk discounts work?",
-    "Recommend technical events",
-  ];
+  // Dynamic suggestions based on user state
+  const getQuickSuggestions = useCallback(() => {
+    if (!user) {
+      return [
+        "What events are happening this week?",
+        "Tell me about the clubs at MHSSCE",
+        "How do I register for events?",
+        "I'm new here, guide me!",
+      ];
+    }
+    
+    if (profile?.role === 'club_coordinator') {
+      return [
+        "How do I create a new event?",
+        "Show me my club's analytics",
+        "How to manage registrations?",
+        "Tips for promoting events",
+      ];
+    }
+    
+    if (profile?.role === 'admin') {
+      return [
+        "Show pending event approvals",
+        "How to manage users?",
+        "Platform overview",
+        "System analytics",
+      ];
+    }
+    
+    // Default student suggestions
+    return [
+      "Recommend technical events for me",
+      "What cultural events are coming up?",
+      "Tell me about IEEE MHSSCE",
+      "How do bulk discounts work?",
+    ];
+  }, [user, profile]);
 
   const sendMessage = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
@@ -67,20 +100,46 @@ const CampusBuddy = () => {
       const context = {
         events: mockEvents.filter(e => e.status === 'approved').map(e => ({
           title: e.title,
-          date: new Date(e.date).toLocaleDateString(),
+          date: new Date(e.date).toLocaleDateString('en-IN', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric' 
+          }),
           venue: e.venue,
           club: e.club?.name || 'Unknown',
           category: e.category,
           price: e.price,
+          capacity: e.capacity,
+          registered: e.registeredCount || 0,
         })),
-        clubs: mockClubs.map(c => ({
-          name: c.name,
-          description: c.description,
-        })),
+      clubs: mockClubs.map(c => ({
+        name: c.name,
+        description: c.description,
+        memberCount: c.memberCount,
+        eventCount: c.eventsCount,
+      })),
+    };
+
+      // Prepare user context
+      const userContext = {
+        isLoggedIn: !!user,
+        userRole: profile?.role,
+        userName: profile?.fullName,
       };
 
+      // Prepare conversation history for context
+      const conversationHistory = messages.slice(-6).map(m => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+      }));
+
       const { data, error } = await supabase.functions.invoke('campus-buddy', {
-        body: { message: messageText.trim(), context },
+        body: { 
+          message: messageText.trim(), 
+          context,
+          userContext,
+          conversationHistory,
+        },
       });
 
       if (error) throw error;
@@ -98,7 +157,7 @@ const CampusBuddy = () => {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "I'm having trouble connecting right now. Please try again in a moment! 🔄",
+        content: "I'm having trouble connecting right now. In the meantime, you can:\n\n• Browse events at /events\n• Explore clubs at /clubs\n• Check your dashboard\n\nPlease try again in a moment! 🔄",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -111,6 +170,8 @@ const CampusBuddy = () => {
     e.preventDefault();
     sendMessage(input);
   };
+
+  const quickSuggestions = getQuickSuggestions();
 
   return (
     <>
@@ -167,9 +228,11 @@ const CampusBuddy = () => {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-primary-foreground">Campus Buddy</h3>
-                <p className="text-xs text-primary-foreground/70">Your MHSSCE Assistant</p>
+                <p className="text-xs text-primary-foreground/70">
+                  {user ? `Hi ${profile?.fullName?.split(' ')[0] || 'there'}!` : 'Your MHSSCE Assistant'}
+                </p>
               </div>
-              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-success/20 text-success text-xs">
+              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-primary-foreground/20 text-primary-foreground text-xs">
                 <Sparkles className="h-3 w-3" />
                 Online
               </div>
