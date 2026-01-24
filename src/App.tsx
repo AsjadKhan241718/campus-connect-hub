@@ -15,6 +15,10 @@ import EventDetail from "./pages/EventDetail";
 import Clubs from "./pages/Clubs";
 import ClubDetail from "./pages/ClubDetail";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Help from "./pages/Help";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Profile from "./pages/Profile";
@@ -47,6 +51,10 @@ const App = () => (
               <Route path="/clubs" element={<Clubs />} />
               <Route path="/clubs/:id" element={<ClubDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
               <Route path="/cart" element={<Cart />} />
               
               {/* Protected Routes - All authenticated users */}
@@ -102,11 +110,7 @@ const App = () => (
                 </ProtectedRoute>
               } />
               
-              {/* Fallback routes - show Coming Soon instead of 404 */}
-              <Route path="/contact" element={<NotFound />} />
-              <Route path="/help" element={<NotFound />} />
-              <Route path="/privacy" element={<NotFound />} />
-              <Route path="/terms" element={<NotFound />} />
+              {/* Fallback route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
             <CampusBuddy />
