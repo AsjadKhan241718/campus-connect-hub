@@ -18,10 +18,12 @@ import About from "./pages/About";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import StudentDashboard from "./pages/StudentDashboard";
 import ClubDashboard from "./pages/ClubDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateEvent from "./pages/CreateEvent";
+import Analytics from "./pages/Analytics";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
@@ -53,6 +55,11 @@ const App = () => (
                   <Profile />
                 </ProtectedRoute>
               } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              } />
               
               {/* Protected Routes - Students */}
               <Route path="/dashboard" element={
@@ -70,6 +77,11 @@ const App = () => (
               <Route path="/create-event" element={
                 <ProtectedRoute allowedRoles={['club_coordinator', 'admin']}>
                   <CreateEvent />
+                </ProtectedRoute>
+              } />
+              <Route path="/analytics" element={
+                <ProtectedRoute allowedRoles={['club_coordinator', 'admin']}>
+                  <Analytics />
                 </ProtectedRoute>
               } />
               
@@ -95,7 +107,6 @@ const App = () => (
               <Route path="/help" element={<NotFound />} />
               <Route path="/privacy" element={<NotFound />} />
               <Route path="/terms" element={<NotFound />} />
-              <Route path="/settings" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <CampusBuddy />

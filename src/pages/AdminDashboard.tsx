@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   Calendar, 
   Users, 
@@ -74,10 +75,12 @@ const AdminDashboard = () => {
                 Manage events, clubs, and system settings
               </p>
             </div>
-            <Button variant="outline" className="gap-2 w-fit">
-              <Settings className="h-4 w-4" />
-              System Settings
-            </Button>
+            <Link to="/settings">
+              <Button variant="outline" className="gap-2 w-fit">
+                <Settings className="h-4 w-4" />
+                System Settings
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Stats Grid */}
@@ -193,7 +196,7 @@ const AdminDashboard = () => {
                     <h2 className="text-xl font-display font-semibold text-foreground">
                       Manage Clubs ({mockClubs.length})
                     </h2>
-                    <Button size="sm">Add New Club</Button>
+                    <Button size="sm" onClick={() => toast.success('Feature coming soon!')}>Add New Club</Button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -217,9 +220,11 @@ const AdminDashboard = () => {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-muted-foreground">{club.eventsCount} events</span>
-                          <Button variant="ghost" size="sm">
-                            Manage <ChevronRight className="h-4 w-4 ml-1" />
-                          </Button>
+                          <Link to={`/clubs/${club.id}`}>
+                            <Button variant="ghost" size="sm">
+                              Manage <ChevronRight className="h-4 w-4 ml-1" />
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     ))}
@@ -244,7 +249,7 @@ const AdminDashboard = () => {
                         Configure bulk purchase discounts
                       </p>
                     </div>
-                    <Button size="sm">Add Rule</Button>
+                    <Button size="sm" onClick={() => toast.success('Feature coming soon!')}>Add Rule</Button>
                   </div>
 
                   <div className="overflow-x-auto">
@@ -272,7 +277,7 @@ const AdminDashboard = () => {
                               </Badge>
                             </td>
                             <td className="py-4 px-4 text-right">
-                              <Button variant="ghost" size="sm">Edit</Button>
+                              <Button variant="ghost" size="sm" onClick={() => toast.success('Edit feature coming soon!')}>Edit</Button>
                             </td>
                           </tr>
                         ))}

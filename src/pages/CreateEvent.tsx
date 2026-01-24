@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { format } from 'date-fns';
 import { 
-  Calendar, 
+  Calendar as CalendarIcon, 
   Clock, 
   MapPin, 
   DollarSign, 
@@ -11,12 +12,15 @@ import {
   Image as ImageIcon,
   ArrowLeft,
   Save,
-  Send
+  Send,
+  IndianRupee
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Calendar } from '@/components/ui/calendar';
+import { Slider } from '@/components/ui/slider';
 import {
   Select,
   SelectContent,
@@ -24,10 +28,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import ImageUpload from '@/components/events/ImageUpload';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const eventCategories = [
   'Technology',
@@ -44,14 +55,15 @@ const CreateEvent = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [date, setDate] = useState<Date>();
+  const [posterUrl, setPosterUrl] = useState<string>();
+  const [capacity, setCapacity] = useState([100]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    date: '',
     time: '',
     venue: '',
     price: '',
-    capacity: '',
     category: '',
   });
 
@@ -65,7 +77,7 @@ const CreateEvent = () => {
   };
 
   const handleSubmit = async (status: 'draft' | 'pending') => {
-    if (!formData.title || !formData.date || !formData.time || !formData.venue) {
+    if (!formData.title || !date || !formData.time || !formData.venue || !formData.category) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -114,8 +126,30 @@ const CreateEvent = () => {
           </div>
 
           <div className="space-y-6">
+            {/* Event Poster */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-card rounded-xl border border-border p-6"
+            >
+              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                Event Poster
+              </h2>
+              <ImageUpload 
+                value={posterUrl}
+                onChange={setPosterUrl}
+              />
+            </motion.div>
+
             {/* Basic Info */}
-            <div className="bg-card rounded-xl border border-border p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-card rounded-xl border border-border p-6"
+            >
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
                 Basic Information
@@ -159,23 +193,45 @@ const CreateEvent = () => {
                   </Select>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Date & Time */}
-            <div className="bg-card rounded-xl border border-border p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-card rounded-xl border border-border p-6"
+            >
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
+                <CalendarIcon className="h-5 w-5 text-primary" />
                 Date & Time
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="date">Event Date *</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => handleChange('date', e.target.value)}
-                  />
+                  <Label>Event Date *</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? format(date, "PPP") : "Pick a date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                        disabled={(date) => date < new Date()}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div>
                   <Label htmlFor="time">Start Time *</Label>
@@ -191,10 +247,15 @@ const CreateEvent = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Location */}
-            <div className="bg-card rounded-xl border border-border p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-card rounded-xl border border-border p-6"
+            >
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-primary" />
                 Location
@@ -208,29 +269,45 @@ const CreateEvent = () => {
                   onChange={(e) => handleChange('venue', e.target.value)}
                 />
               </div>
-            </div>
+            </motion.div>
 
             {/* Capacity & Pricing */}
-            <div className="bg-card rounded-xl border border-border p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-card rounded-xl border border-border p-6"
+            >
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
                 Capacity & Pricing
               </h2>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-6">
                 <div>
-                  <Label htmlFor="capacity">Maximum Capacity</Label>
-                  <Input
-                    id="capacity"
-                    type="number"
-                    placeholder="100"
-                    value={formData.capacity}
-                    onChange={(e) => handleChange('capacity', e.target.value)}
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Maximum Capacity</Label>
+                    <span className="text-sm font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">
+                      {capacity[0]} participants
+                    </span>
+                  </div>
+                  <Slider
+                    value={capacity}
+                    onValueChange={setCapacity}
+                    max={500}
+                    min={10}
+                    step={10}
+                    className="w-full"
                   />
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <span>10</span>
+                    <span>250</span>
+                    <span>500</span>
+                  </div>
                 </div>
                 <div>
                   <Label htmlFor="price">Ticket Price (₹)</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="price"
                       type="number"
@@ -240,29 +317,20 @@ const CreateEvent = () => {
                       onChange={(e) => handleChange('price', e.target.value)}
                     />
                   </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Leave as 0 or empty for free events
+                  </p>
                 </div>
               </div>
-            </div>
-
-            {/* Event Poster */}
-            <div className="bg-card rounded-xl border border-border p-6">
-              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <ImageIcon className="h-5 w-5 text-primary" />
-                Event Poster
-              </h2>
-              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
-                <ImageIcon className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-                <p className="text-sm text-muted-foreground">
-                  Drag and drop an image, or click to browse
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  PNG, JPG up to 5MB
-                </p>
-              </div>
-            </div>
+            </motion.div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-end">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-col sm:flex-row gap-3 justify-end"
+            >
               <Button
                 variant="outline"
                 onClick={() => handleSubmit('draft')}
@@ -280,7 +348,7 @@ const CreateEvent = () => {
                 <Send className="h-4 w-4" />
                 Submit for Approval
               </Button>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </main>
