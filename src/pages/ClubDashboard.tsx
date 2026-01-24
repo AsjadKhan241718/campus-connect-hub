@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Calendar, 
   Users, 
@@ -21,9 +21,11 @@ import StatCard from '@/components/dashboard/StatCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockEvents, mockClubs } from '@/lib/mock-data';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 const ClubDashboard = () => {
   const { profile } = useAuth();
+  const navigate = useNavigate();
   
   // Mock: Get events for the coordinator's club
   const myClub = mockClubs[0]; // IEEE MHSSCE
@@ -45,6 +47,14 @@ const ClubDashboard = () => {
     approved: 'bg-success/10 text-success border-success/20',
     rejected: 'bg-destructive/10 text-destructive border-destructive/20',
     completed: 'bg-secondary text-secondary-foreground',
+  };
+
+  const handleExport = () => {
+    toast.success('Exporting participant data...');
+    // Simulate download
+    setTimeout(() => {
+      toast.success('Export complete! Check your downloads folder.');
+    }, 1500);
   };
 
   return (
@@ -103,7 +113,7 @@ const ClubDashboard = () => {
                     My Events
                   </h2>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="gap-1">
+                    <Button variant="outline" size="sm" className="gap-1" onClick={handleExport}>
                       <Download className="h-4 w-4" />
                       Export
                     </Button>
@@ -230,14 +240,20 @@ const ClubDashboard = () => {
                   Quick Actions
                 </h3>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start gap-2"
+                    onClick={handleExport}
+                  >
                     <Download className="h-4 w-4" />
                     Export Participants
                   </Button>
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <BarChart3 className="h-4 w-4" />
-                    View Analytics
-                  </Button>
+                  <Link to="/analytics" className="block">
+                    <Button variant="outline" className="w-full justify-start gap-2">
+                      <BarChart3 className="h-4 w-4" />
+                      View Analytics
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>

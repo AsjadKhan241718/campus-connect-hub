@@ -107,7 +107,7 @@ const Profile = () => {
             transition={{ delay: 0.2 }}
             className="bg-card rounded-xl border border-border overflow-hidden"
           >
-            <Link to="/dashboard" className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors border-b border-border">
+            <Link to={profile?.role === 'admin' ? '/admin' : profile?.role === 'club_coordinator' ? '/club-dashboard' : '/dashboard'} className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors border-b border-border">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Calendar className="h-5 w-5 text-primary" />
