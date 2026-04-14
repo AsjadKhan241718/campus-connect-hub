@@ -22,21 +22,25 @@ const StatsGrid = ({ stats }: StatsGridProps) => {
       bg: 'bg-primary/10',
       text: 'text-primary',
       border: 'border-primary/20',
+      gradient: 'from-primary/5 to-transparent',
     },
     accent: {
       bg: 'bg-accent/10',
       text: 'text-accent',
       border: 'border-accent/20',
+      gradient: 'from-accent/5 to-transparent',
     },
     success: {
       bg: 'bg-success/10',
       text: 'text-success',
       border: 'border-success/20',
+      gradient: 'from-success/5 to-transparent',
     },
     warning: {
       bg: 'bg-warning/10',
       text: 'text-warning',
       border: 'border-warning/20',
+      gradient: 'from-warning/5 to-transparent',
     },
   };
 
@@ -45,27 +49,35 @@ const StatsGrid = ({ stats }: StatsGridProps) => {
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         const colors = colorClasses[stat.color];
-        
+
         return (
           <motion.div
             key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: index * 0.08, type: 'spring', stiffness: 200 }}
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className={`relative overflow-hidden rounded-xl bg-card border ${colors.border} p-6 shadow-sm hover:shadow-lg transition-shadow`}
+            className={`relative overflow-hidden rounded-2xl bg-card border ${colors.border} p-6 shadow-sm hover:shadow-lg transition-all duration-300 cursor-default`}
           >
-            {/* Background decoration */}
-            <div className={`absolute -top-4 -right-4 w-24 h-24 rounded-full ${colors.bg} opacity-50`} />
-            
+            {/* Background gradient */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} opacity-60`} />
+            {/* Corner decoration */}
+            <div className={`absolute -top-6 -right-6 w-20 h-20 rounded-full ${colors.bg} opacity-40 blur-xl`} />
+
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-2.5 rounded-xl ${colors.bg}`}>
+                <motion.div
+                  whileHover={{ rotate: 12, scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                  className={`p-3 rounded-xl ${colors.bg}`}
+                >
                   <Icon className={`h-5 w-5 ${colors.text}`} />
-                </div>
+                </motion.div>
                 {stat.trend && (
-                  <div className={`flex items-center gap-1 text-xs font-medium ${
-                    stat.trend.isPositive ? 'text-success' : 'text-destructive'
+                  <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${
+                    stat.trend.isPositive
+                      ? 'bg-success/10 text-success'
+                      : 'bg-destructive/10 text-destructive'
                   }`}>
                     {stat.trend.isPositive ? (
                       <TrendingUp className="h-3 w-3" />
@@ -76,8 +88,8 @@ const StatsGrid = ({ stats }: StatsGridProps) => {
                   </div>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground mb-1">{stat.title}</p>
-              <p className="text-3xl font-display font-bold text-foreground">{stat.value}</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">{stat.title}</p>
+              <p className="text-3xl font-display font-extrabold text-foreground tracking-tight">{stat.value}</p>
             </div>
           </motion.div>
         );

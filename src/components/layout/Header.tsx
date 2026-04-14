@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { 
-  Menu, 
-  X, 
-  Bell, 
-  ShoppingCart, 
+import {
+  Menu,
+  X,
+  Bell,
+  ShoppingCart,
   User,
   LogOut,
   Settings,
   Calendar,
-  GraduationCap
+  GraduationCap,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -30,8 +30,8 @@ const Header = () => {
   const location = useLocation();
   const { user, profile, logout } = useAuth();
   const { itemCount } = useCart();
-  
-  const notificationCount = 0; // TODO: implement notifications
+
+  const notificationCount = 0;
 
   const getDashboardLink = () => {
     if (!profile) return '/login';
@@ -48,26 +48,33 @@ const Header = () => {
     { href: '/about', label: 'About' },
   ];
 
-  // Add dashboard link for logged-in users
-  const userNavLinks = user ? [
-    ...navLinks,
-    { href: getDashboardLink(), label: 'Dashboard' },
-  ] : navLinks;
+  const userNavLinks = user
+    ? [...navLinks, { href: getDashboardLink(), label: 'Dashboard' }]
+    : navLinks;
 
-  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-card/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-md">
+          <Link to="/" className="flex items-center gap-3 group">
+            <motion.div
+              whileHover={{ rotate: -6, scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/20"
+            >
               <GraduationCap className="h-6 w-6 text-primary-foreground" />
-            </div>
+            </motion.div>
             <div className="hidden sm:block">
-              <span className="font-display text-lg font-bold text-foreground">MHSSCE</span>
-              <span className="ml-1 text-sm text-muted-foreground">Events</span>
+              <span className="font-display text-lg font-extrabold text-foreground tracking-tight">
+                MHSSCE
+              </span>
+              <span className="ml-1.5 text-xs font-medium text-muted-foreground tracking-wider uppercase">
+                Events
+              </span>
             </div>
           </Link>
 
@@ -77,27 +84,34 @@ const Header = () => {
               <Link
                 key={link.href}
                 to={link.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(link.href)
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
                 }`}
               >
                 {link.label}
+                {isActive(link.href) && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    className="absolute inset-0 rounded-lg bg-primary/10"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  />
+                )}
               </Link>
             ))}
           </nav>
 
           {/* Right Side Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {user ? (
               <>
                 {/* Cart */}
                 <Link to="/cart">
-                  <Button variant="ghost" size="icon" className="relative">
+                  <Button variant="ghost" size="icon" className="relative rounded-xl">
                     <ShoppingCart className="h-5 w-5" />
                     {itemCount > 0 && (
-                      <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-accent text-accent-foreground text-xs">
+                      <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-accent text-accent-foreground text-[10px] font-bold shadow-md">
                         {itemCount}
                       </Badge>
                     )}
@@ -107,16 +121,16 @@ const Header = () => {
                 {/* Notifications */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="relative">
+                    <Button variant="ghost" size="icon" className="relative rounded-xl">
                       <Bell className="h-5 w-5" />
                       {notificationCount > 0 && (
-                        <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-destructive text-destructive-foreground text-xs">
+                        <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-destructive text-destructive-foreground text-[10px] font-bold">
                           {notificationCount}
                         </Badge>
                       )}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80">
+                  <DropdownMenuContent align="end" className="w-80 rounded-xl">
                     <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <div className="p-4 text-center text-sm text-muted-foreground">
@@ -128,18 +142,22 @@ const Header = () => {
                 {/* User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full">
+                    <Button variant="ghost" size="icon" className="rounded-full ring-2 ring-border hover:ring-primary/30 transition-all">
                       {profile?.avatarUrl ? (
-                        <img src={profile.avatarUrl} alt={profile.fullName} className="h-8 w-8 rounded-full" />
+                        <img src={profile.avatarUrl} alt={profile.fullName} className="h-8 w-8 rounded-full object-cover" />
                       ) : (
-                        <User className="h-5 w-5" />
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-sm font-bold text-primary">
+                            {(profile?.fullName || 'U').charAt(0)}
+                          </span>
+                        </div>
                       )}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-56 rounded-xl">
                     <DropdownMenuLabel>
                       <div className="flex flex-col">
-                        <span>{profile?.fullName || 'User'}</span>
+                        <span className="font-semibold">{profile?.fullName || 'User'}</span>
                         <span className="text-xs font-normal text-muted-foreground">{user?.email}</span>
                       </div>
                     </DropdownMenuLabel>
@@ -157,7 +175,7 @@ const Header = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive">
+                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive focus:text-destructive">
                       <LogOut className="mr-2 h-4 w-4" />
                       Logout
                     </DropdownMenuItem>
@@ -167,10 +185,10 @@ const Header = () => {
             ) : (
               <div className="hidden sm:flex items-center gap-2">
                 <Link to="/login">
-                  <Button variant="ghost">Log in</Button>
+                  <Button variant="ghost" className="rounded-xl">Log in</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button variant="default">Sign up</Button>
+                  <Button className="rounded-xl shadow-md shadow-primary/20">Sign up</Button>
                 </Link>
               </div>
             )}
@@ -179,10 +197,20 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden rounded-xl"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              <AnimatePresence mode="wait">
+                {mobileMenuOpen ? (
+                  <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
+                    <X className="h-5 w-5" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
+                    <Menu className="h-5 w-5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </Button>
           </div>
         </div>
@@ -195,43 +223,47 @@ const Header = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border bg-card"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden border-t border-border bg-card/95 backdrop-blur-xl"
           >
-            <nav className="container mx-auto px-4 py-4 flex flex-col gap-2">
-              {userNavLinks.map((link) => (
-                <Link
+            <nav className="container mx-auto px-4 py-4 flex flex-col gap-1">
+              {userNavLinks.map((link, i) => (
+                <motion.div
                   key={link.href}
-                  to={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                    isActive(link.href)
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                  }`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
                 >
-                  {link.label}
-                </Link>
+                  <Link
+                    to={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                      isActive(link.href)
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
               {user && (
-                <Button 
-                  variant="ghost" 
-                  className="justify-start px-4 text-destructive hover:text-destructive mt-2"
-                  onClick={() => {
-                    logout();
-                    setMobileMenuOpen(false);
-                  }}
+                <Button
+                  variant="ghost"
+                  className="justify-start px-4 text-destructive hover:text-destructive mt-2 rounded-xl"
+                  onClick={() => { logout(); setMobileMenuOpen(false); }}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Logout
                 </Button>
               )}
               {!user && (
-                <div className="flex gap-2 pt-2 border-t border-border mt-2">
+                <div className="flex gap-2 pt-3 border-t border-border mt-2">
                   <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full">Log in</Button>
+                    <Button variant="outline" className="w-full rounded-xl">Log in</Button>
                   </Link>
                   <Link to="/signup" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full">Sign up</Button>
+                    <Button className="w-full rounded-xl">Sign up</Button>
                   </Link>
                 </div>
               )}
