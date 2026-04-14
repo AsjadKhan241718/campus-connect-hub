@@ -1,4 +1,12 @@
 import { Club, Event, DiscountRule } from '@/types';
+import techfestImg from '@/assets/events/techfest.jpg';
+import codesprintImg from '@/assets/events/codesprint.jpg';
+import symposiumImg from '@/assets/events/symposium.jpg';
+import industryImg from '@/assets/events/industry.jpg';
+import culturalImg from '@/assets/events/cultural.jpg';
+import webdevImg from '@/assets/events/webdev.jpg';
+import hackathonImg from '@/assets/events/hackathon.jpg';
+import cricketImg from '@/assets/events/cricket.jpg';
 
 // Updated club data with real committee names
 export const mockClubs: Club[] = [
@@ -79,6 +87,7 @@ export const mockEvents: Event[] = [
     registeredCount: 342,
     status: 'approved',
     category: 'Technology',
+    poster: techfestImg,
     createdAt: new Date('2024-01-20'),
   },
   {
@@ -94,7 +103,8 @@ export const mockEvents: Event[] = [
     capacity: 200,
     registeredCount: 156,
     status: 'approved',
-    category: 'Competition',
+    category: 'Technology',
+    poster: codesprintImg,
     createdAt: new Date('2024-01-25'),
   },
   {
@@ -110,7 +120,8 @@ export const mockEvents: Event[] = [
     capacity: 150,
     registeredCount: 89,
     status: 'approved',
-    category: 'Seminar',
+    category: 'Technology',
+    poster: symposiumImg,
     createdAt: new Date('2024-02-01'),
   },
   {
@@ -126,7 +137,8 @@ export const mockEvents: Event[] = [
     capacity: 100,
     registeredCount: 78,
     status: 'approved',
-    category: 'Seminar',
+    category: 'Business',
+    poster: industryImg,
     createdAt: new Date('2024-02-05'),
   },
   {
@@ -143,6 +155,7 @@ export const mockEvents: Event[] = [
     registeredCount: 756,
     status: 'approved',
     category: 'Cultural',
+    poster: culturalImg,
     createdAt: new Date('2024-02-10'),
   },
   {
@@ -159,6 +172,7 @@ export const mockEvents: Event[] = [
     registeredCount: 48,
     status: 'approved',
     category: 'Workshop',
+    poster: webdevImg,
     createdAt: new Date('2024-02-15'),
   },
   {
@@ -174,7 +188,8 @@ export const mockEvents: Event[] = [
     capacity: 200,
     registeredCount: 145,
     status: 'pending',
-    category: 'Competition',
+    category: 'Technology',
+    poster: hackathonImg,
     createdAt: new Date('2024-02-20'),
   },
   {
@@ -191,6 +206,7 @@ export const mockEvents: Event[] = [
     registeredCount: 12,
     status: 'pending',
     category: 'Sports',
+    poster: cricketImg,
     createdAt: new Date('2024-02-25'),
   },
 ];
