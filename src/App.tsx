@@ -31,7 +31,9 @@ import Analytics from "./pages/Analytics";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 1 } },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
