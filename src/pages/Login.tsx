@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, GraduationCap, Mail, Lock, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, Mail, Lock, Loader2, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+
+const DEMO_ACCOUNTS = [
+  { role: 'Student', email: 'student@mhssce.edu', password: 'student123', color: 'primary' },
+  { role: 'Admin', email: 'admin@mhssce.edu', password: 'admin123', color: 'destructive' },
+  { role: 'Club Coordinator', email: 'coordinator@mhssce.edu', password: 'coordinator123', color: 'accent' },
+];
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +25,6 @@ const Login = () => {
 
   const from = (location.state as any)?.from?.pathname || '/';
 
-  // Redirect if already logged in
   if (user) {
     navigate(from, { replace: true });
     return null;
@@ -27,22 +32,24 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
     }
-
     setIsSubmitting(true);
     const result = await login(email, password);
     setIsSubmitting(false);
-    
     if (result.success) {
       toast.success('Welcome back!');
       navigate(from, { replace: true });
     } else {
       toast.error(result.error || 'Login failed');
     }
+  };
+
+  const fillDemo = (account: typeof DEMO_ACCOUNTS[0]) => {
+    setEmail(account.email);
+    setPassword(account.password);
   };
 
   return (
@@ -55,7 +62,6 @@ const Login = () => {
           transition={{ duration: 0.5 }}
           className="w-full max-w-md space-y-8"
         >
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-md">
               <GraduationCap className="h-7 w-7 text-primary-foreground" />
@@ -66,17 +72,35 @@ const Login = () => {
             </div>
           </Link>
 
-          {/* Header */}
           <div>
-            <h1 className="text-3xl font-display font-bold text-foreground">
-              Welcome back
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Sign in to your account to continue
-            </p>
+            <h1 className="text-3xl font-display font-bold text-foreground">Welcome back</h1>
+            <p className="text-muted-foreground mt-2">Sign in to your account to continue</p>
           </div>
 
-          {/* Form */}
+          {/* Demo Credentials */}
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+            <div className="flex items-center gap-2 text-sm font-medium text-primary">
+              <Info className="h-4 w-4" />
+              Demo Accounts (click to auto-fill)
+            </div>
+            <div className="grid gap-2">
+              {DEMO_ACCOUNTS.map((account) => (
+                <button
+                  key={account.role}
+                  type="button"
+                  onClick={() => fillDemo(account)}
+                  className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-left text-sm hover:border-primary/40 hover:bg-primary/5 transition-all group"
+                >
+                  <div>
+                    <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{account.role}</span>
+                    <span className="text-muted-foreground ml-2">{account.email}</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground font-mono">{account.password}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -122,9 +146,6 @@ const Login = () => {
                 <input type="checkbox" className="rounded border-input" />
                 <span className="text-muted-foreground">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                Forgot password?
-              </Link>
             </div>
 
             <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
@@ -139,7 +160,6 @@ const Login = () => {
             </Button>
           </form>
 
-          {/* Sign Up Link */}
           <p className="text-center text-sm text-muted-foreground">
             Don't have an account?{' '}
             <Link to="/signup" className="text-primary font-medium hover:underline">
@@ -160,9 +180,7 @@ const Login = () => {
           <div className="w-24 h-24 mx-auto rounded-2xl bg-background/10 backdrop-blur-sm flex items-center justify-center">
             <GraduationCap className="h-12 w-12" />
           </div>
-          <h2 className="text-3xl font-display font-bold">
-            Campus Events Hub
-          </h2>
+          <h2 className="text-3xl font-display font-bold">Campus Events Hub</h2>
           <p className="text-primary-foreground/80 leading-relaxed">
             Join thousands of students discovering and participating in exciting campus events. 
             From tech festivals to cultural nights, never miss an opportunity to learn and grow.
