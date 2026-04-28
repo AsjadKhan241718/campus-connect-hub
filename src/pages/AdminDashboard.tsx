@@ -30,18 +30,25 @@ import WelcomeCard from '@/components/dashboard/WelcomeCard';
 import StatsGrid from '@/components/dashboard/StatsGrid';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockEvents, mockClubs, mockDiscountRules } from '@/lib/mock-data';
+import { useEvents, useClubs, useAllRegistrations } from '@/hooks/useSupabaseData';
+import { mockDiscountRules } from '@/lib/mock-data';
 import { format, subHours, subDays } from 'date-fns';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 const AdminDashboard = () => {
   const { profile } = useAuth();
-  const [pendingEvents, setPendingEvents] = useState(mockEvents.filter(e => e.status === 'pending'));
-  
-  const allEvents = mockEvents;
-  const approvedEvents = allEvents.filter(e => e.status === 'approved');
-  const totalRegistrations = allEvents.reduce((acc, e) => acc + e.registeredCount, 0);
-  const totalRevenue = allEvents.reduce((acc, e) => acc + (e.registeredCount * e.price), 0);
+  const queryClient = useQueryClient();
+  const { data: allEvents = [] } = useEvents();
+  const { data: clubs = [] } = useClubs();
+  const { data: allRegistrations = [] } = useAllRegistrations();
+
+  const pendingEvents = allEvents.filter((e) => e.status === 'pending');
+  const approvedEvents = allEvents.filter((e) => e.status === 'approved');
+  const totalRegistrations = allRegistrations.length || allEvents.reduce((acc, e) => acc + e.registeredCount, 0);
+  const totalRevenue = allRegistrations.reduce((acc: number, r: any) => acc + Number(r.final_total || 0), 0)
+    || allEvents.reduce((acc, e) => acc + (e.registeredCount * e.price), 0);
 
   const stats = [
     { 
