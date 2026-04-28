@@ -23,15 +23,20 @@ import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import QuickActionCard from '@/components/dashboard/QuickActionCard';
 import UpcomingEventsList from '@/components/dashboard/UpcomingEventsList';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockEvents, mockClubs } from '@/lib/mock-data';
+import { useEvents, useClubs, useMyRegistrations } from '@/hooks/useSupabaseData';
 import { format, subHours, subDays } from 'date-fns';
 
 const StudentDashboard = () => {
-  const { profile } = useAuth();
-  
-  // Mock registered events
-  const registeredEvents = mockEvents.slice(0, 3);
-  const upcomingEvents = mockEvents.filter(e => e.status === 'approved').slice(0, 4);
+  const { profile, user } = useAuth();
+  const { data: events = [] } = useEvents();
+  const { data: clubs = [] } = useClubs();
+  const { data: registrations = [] } = useMyRegistrations(user?.id);
+
+  const registeredEvents = registrations
+    .map((r) => r.event)
+    .filter((e): e is NonNullable<typeof e> => !!e)
+    .slice(0, 3);
+  const upcomingEvents = events.filter((e) => e.status === 'approved').slice(0, 4);
 
   const stats = [
     { 
