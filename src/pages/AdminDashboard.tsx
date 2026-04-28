@@ -60,7 +60,7 @@ const AdminDashboard = () => {
     },
     { 
       title: 'Active Clubs', 
-      value: mockClubs.length, 
+      value: clubs.length, 
       icon: Building2, 
       color: 'accent' as const,
       trend: { value: 2, isPositive: true }
@@ -380,7 +380,7 @@ const AdminDashboard = () => {
                               Manage Clubs
                             </h2>
                             <p className="text-sm text-muted-foreground">
-                              {mockClubs.length} active clubs
+                              {clubs.length} active clubs
                             </p>
                           </div>
                         </div>
@@ -391,7 +391,7 @@ const AdminDashboard = () => {
 
                       <div className="p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {mockClubs.map((club, index) => (
+                          {clubs.map((club, index) => (
                             <motion.div
                               key={club.id}
                               initial={{ opacity: 0, y: 10 }}
