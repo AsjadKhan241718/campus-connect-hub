@@ -26,19 +26,22 @@ import WelcomeCard from '@/components/dashboard/WelcomeCard';
 import StatsGrid from '@/components/dashboard/StatsGrid';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockEvents, mockClubs } from '@/lib/mock-data';
+import { useEvents, useMyClub, useClubs } from '@/hooks/useSupabaseData';
 import { format, subHours, subDays } from 'date-fns';
 import { toast } from 'sonner';
 
 const ClubDashboard = () => {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const navigate = useNavigate();
-  
-  // Mock: Get events for the coordinator's club
-  const myClub = mockClubs[0]; // IEEE MHSSCE
-  const myEvents = mockEvents.filter(e => e.clubId === myClub.id);
-  const pendingEvents = myEvents.filter(e => e.status === 'pending');
-  const approvedEvents = myEvents.filter(e => e.status === 'approved');
+  const { data: allEvents = [] } = useEvents();
+  const { data: coordinatedClub } = useMyClub(user?.id);
+  const { data: clubs = [] } = useClubs();
+
+  // Fall back to first club if coordinator isn't explicitly linked yet
+  const myClub = coordinatedClub || clubs[0];
+  const myEvents = myClub ? allEvents.filter((e) => e.clubId === myClub.id) : [];
+  const pendingEvents = myEvents.filter((e) => e.status === 'pending');
+  const approvedEvents = myEvents.filter((e) => e.status === 'approved');
   const totalRegistrations = myEvents.reduce((acc, e) => acc + e.registeredCount, 0);
   const totalRevenue = myEvents.reduce((acc, e) => acc + (e.registeredCount * e.price), 0);
 
