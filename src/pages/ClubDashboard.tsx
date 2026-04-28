@@ -68,7 +68,7 @@ const ClubDashboard = () => {
     },
     { 
       title: 'Club Members', 
-      value: myClub.memberCount, 
+      value: myClub?.memberCount ?? 0, 
       icon: Users, 
       color: 'accent' as const,
       trend: { value: 5, isPositive: true }
@@ -136,7 +136,7 @@ const ClubDashboard = () => {
             <WelcomeCard 
               userName={profile?.fullName || 'Coordinator'}
               role="club_coordinator"
-              subtitle={`Managing ${myClub.name} - ${myEvents.length} events, ${totalRegistrations} registrations`}
+              subtitle={`Managing ${myClub?.name ?? 'your club'} - ${myEvents.length} events, ${totalRegistrations} registrations`}
             />
           </motion.div>
 
@@ -308,19 +308,19 @@ const ClubDashboard = () => {
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                    {myClub.logo ? (
+                    {myClub?.logo ? (
                       <img src={myClub.logo} alt={myClub.name} className="w-10 h-10" />
                     ) : (
-                      <span className="text-2xl font-bold text-primary">{myClub.name.charAt(0)}</span>
+                      <span className="text-2xl font-bold text-primary">{myClub?.name?.charAt(0) ?? 'C'}</span>
                     )}
                   </div>
                   <div>
-                    <h3 className="font-display font-semibold text-foreground">{myClub.name}</h3>
-                    <p className="text-sm text-muted-foreground">{myClub.memberCount} members</p>
+                    <h3 className="font-display font-semibold text-foreground">{myClub?.name ?? 'Your Club'}</h3>
+                    <p className="text-sm text-muted-foreground">{myClub?.memberCount ?? 0} members</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Link to={`/clubs/${myClub.id}`} className="block">
+                  <Link to={`/clubs/${myClub?.id ?? ''}`} className="block">
                     <Button variant="outline" className="w-full justify-start gap-2">
                       <Settings className="h-4 w-4" />
                       Club Settings
