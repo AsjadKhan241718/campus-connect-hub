@@ -26,19 +26,22 @@ import WelcomeCard from '@/components/dashboard/WelcomeCard';
 import StatsGrid from '@/components/dashboard/StatsGrid';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockEvents, mockClubs } from '@/lib/mock-data';
+import { useEvents, useMyClub, useClubs } from '@/hooks/useSupabaseData';
 import { format, subHours, subDays } from 'date-fns';
 import { toast } from 'sonner';
 
 const ClubDashboard = () => {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const navigate = useNavigate();
-  
-  // Mock: Get events for the coordinator's club
-  const myClub = mockClubs[0]; // IEEE MHSSCE
-  const myEvents = mockEvents.filter(e => e.clubId === myClub.id);
-  const pendingEvents = myEvents.filter(e => e.status === 'pending');
-  const approvedEvents = myEvents.filter(e => e.status === 'approved');
+  const { data: allEvents = [] } = useEvents();
+  const { data: coordinatedClub } = useMyClub(user?.id);
+  const { data: clubs = [] } = useClubs();
+
+  // Fall back to first club if coordinator isn't explicitly linked yet
+  const myClub = coordinatedClub || clubs[0];
+  const myEvents = myClub ? allEvents.filter((e) => e.clubId === myClub.id) : [];
+  const pendingEvents = myEvents.filter((e) => e.status === 'pending');
+  const approvedEvents = myEvents.filter((e) => e.status === 'approved');
   const totalRegistrations = myEvents.reduce((acc, e) => acc + e.registeredCount, 0);
   const totalRevenue = myEvents.reduce((acc, e) => acc + (e.registeredCount * e.price), 0);
 
@@ -65,7 +68,7 @@ const ClubDashboard = () => {
     },
     { 
       title: 'Club Members', 
-      value: myClub.memberCount, 
+      value: myClub?.memberCount ?? 0, 
       icon: Users, 
       color: 'accent' as const,
       trend: { value: 5, isPositive: true }
@@ -133,7 +136,7 @@ const ClubDashboard = () => {
             <WelcomeCard 
               userName={profile?.fullName || 'Coordinator'}
               role="club_coordinator"
-              subtitle={`Managing ${myClub.name} - ${myEvents.length} events, ${totalRegistrations} registrations`}
+              subtitle={`Managing ${myClub?.name ?? 'your club'} - ${myEvents.length} events, ${totalRegistrations} registrations`}
             />
           </motion.div>
 
@@ -305,19 +308,19 @@ const ClubDashboard = () => {
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                    {myClub.logo ? (
+                    {myClub?.logo ? (
                       <img src={myClub.logo} alt={myClub.name} className="w-10 h-10" />
                     ) : (
-                      <span className="text-2xl font-bold text-primary">{myClub.name.charAt(0)}</span>
+                      <span className="text-2xl font-bold text-primary">{myClub?.name?.charAt(0) ?? 'C'}</span>
                     )}
                   </div>
                   <div>
-                    <h3 className="font-display font-semibold text-foreground">{myClub.name}</h3>
-                    <p className="text-sm text-muted-foreground">{myClub.memberCount} members</p>
+                    <h3 className="font-display font-semibold text-foreground">{myClub?.name ?? 'Your Club'}</h3>
+                    <p className="text-sm text-muted-foreground">{myClub?.memberCount ?? 0} members</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Link to={`/clubs/${myClub.id}`} className="block">
+                  <Link to={`/clubs/${myClub?.id ?? ''}`} className="block">
                     <Button variant="outline" className="w-full justify-start gap-2">
                       <Settings className="h-4 w-4" />
                       Club Settings

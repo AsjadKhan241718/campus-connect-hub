@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// clubs data now comes from Supabase via useClubs()
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -30,18 +30,25 @@ import WelcomeCard from '@/components/dashboard/WelcomeCard';
 import StatsGrid from '@/components/dashboard/StatsGrid';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockEvents, mockClubs, mockDiscountRules } from '@/lib/mock-data';
+import { useEvents, useClubs, useAllRegistrations } from '@/hooks/useSupabaseData';
+import { mockDiscountRules } from '@/lib/mock-data';
 import { format, subHours, subDays } from 'date-fns';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 const AdminDashboard = () => {
   const { profile } = useAuth();
-  const [pendingEvents, setPendingEvents] = useState(mockEvents.filter(e => e.status === 'pending'));
-  
-  const allEvents = mockEvents;
-  const approvedEvents = allEvents.filter(e => e.status === 'approved');
-  const totalRegistrations = allEvents.reduce((acc, e) => acc + e.registeredCount, 0);
-  const totalRevenue = allEvents.reduce((acc, e) => acc + (e.registeredCount * e.price), 0);
+  const queryClient = useQueryClient();
+  const { data: allEvents = [] } = useEvents();
+  const { data: clubs = [] } = useClubs();
+  const { data: allRegistrations = [] } = useAllRegistrations();
+
+  const pendingEvents = allEvents.filter((e) => e.status === 'pending');
+  const approvedEvents = allEvents.filter((e) => e.status === 'approved');
+  const totalRegistrations = allRegistrations.length || allEvents.reduce((acc, e) => acc + e.registeredCount, 0);
+  const totalRevenue = allRegistrations.reduce((acc: number, r: any) => acc + Number(r.final_total || 0), 0)
+    || allEvents.reduce((acc, e) => acc + (e.registeredCount * e.price), 0);
 
   const stats = [
     { 
@@ -53,7 +60,7 @@ const AdminDashboard = () => {
     },
     { 
       title: 'Active Clubs', 
-      value: mockClubs.length, 
+      value: clubs.length, 
       icon: Building2, 
       color: 'accent' as const,
       trend: { value: 2, isPositive: true }
@@ -104,13 +111,29 @@ const AdminDashboard = () => {
     },
   ];
 
-  const handleApprove = (eventId: string) => {
-    setPendingEvents(prev => prev.filter(e => e.id !== eventId));
+  const handleApprove = async (eventId: string) => {
+    const { error } = await supabase
+      .from('events')
+      .update({ status: 'approved' })
+      .eq('id', eventId);
+    if (error) {
+      toast.error('Failed to approve event: ' + error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ['events'] });
     toast.success('Event approved successfully! Students can now register.');
   };
 
-  const handleReject = (eventId: string) => {
-    setPendingEvents(prev => prev.filter(e => e.id !== eventId));
+  const handleReject = async (eventId: string) => {
+    const { error } = await supabase
+      .from('events')
+      .update({ status: 'rejected' })
+      .eq('id', eventId);
+    if (error) {
+      toast.error('Failed to reject event: ' + error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ['events'] });
     toast.error('Event rejected. Coordinator will be notified.');
   };
 
@@ -357,7 +380,7 @@ const AdminDashboard = () => {
                               Manage Clubs
                             </h2>
                             <p className="text-sm text-muted-foreground">
-                              {mockClubs.length} active clubs
+                              {clubs.length} active clubs
                             </p>
                           </div>
                         </div>
@@ -368,7 +391,7 @@ const AdminDashboard = () => {
 
                       <div className="p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {mockClubs.map((club, index) => (
+                          {clubs.map((club, index) => (
                             <motion.div
                               key={club.id}
                               initial={{ opacity: 0, y: 10 }}
