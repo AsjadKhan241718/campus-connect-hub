@@ -14,18 +14,19 @@ import {
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import EventCard from '@/components/events/EventCard';
-import { mockEvents } from '@/lib/mock-data';
+import { useEvents } from '@/hooks/useSupabaseData';
 import { useCart } from '@/contexts/CartContext';
 
 const Events = () => {
   const { addToCart } = useCart();
+  const { data: events = [], isLoading } = useEvents();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('date');
 
   const categories = ['all', 'Technology', 'Cultural', 'Sports', 'Business', 'Workshop'];
 
-  const filteredEvents = mockEvents
+  const filteredEvents = events
     .filter(event => event.status === 'approved')
     .filter(event => 
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
