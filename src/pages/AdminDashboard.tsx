@@ -111,13 +111,29 @@ const AdminDashboard = () => {
     },
   ];
 
-  const handleApprove = (eventId: string) => {
-    setPendingEvents(prev => prev.filter(e => e.id !== eventId));
+  const handleApprove = async (eventId: string) => {
+    const { error } = await supabase
+      .from('events')
+      .update({ status: 'approved' })
+      .eq('id', eventId);
+    if (error) {
+      toast.error('Failed to approve event: ' + error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ['events'] });
     toast.success('Event approved successfully! Students can now register.');
   };
 
-  const handleReject = (eventId: string) => {
-    setPendingEvents(prev => prev.filter(e => e.id !== eventId));
+  const handleReject = async (eventId: string) => {
+    const { error } = await supabase
+      .from('events')
+      .update({ status: 'rejected' })
+      .eq('id', eventId);
+    if (error) {
+      toast.error('Failed to reject event: ' + error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ['events'] });
     toast.error('Event rejected. Coordinator will be notified.');
   };
 
