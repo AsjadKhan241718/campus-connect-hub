@@ -41,7 +41,7 @@ const StudentDashboard = () => {
   const stats = [
     { 
       title: 'Registered Events', 
-      value: 3, 
+      value: registrations.length, 
       icon: Ticket, 
       color: 'primary' as const,
       trend: { value: 20, isPositive: true }
@@ -130,7 +130,7 @@ const StudentDashboard = () => {
     },
   ];
 
-  const favoriteClubs = mockClubs.slice(0, 2);
+  const favoriteClubs = clubs.slice(0, 2);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
